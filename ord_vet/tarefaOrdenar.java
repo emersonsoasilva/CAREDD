@@ -120,7 +120,7 @@ public class tarefaOrdenar {
     private static void ordenar(int[] vet, int N) {
         for(int i=0; i<N; i++){
             for(int j=0; j<N-1; j++){
-                if(vet[j]>vet[j+1])
+                if(vet[j]>vet[j+1])C
                     troca(vet, j, j+1);
             }
         }
