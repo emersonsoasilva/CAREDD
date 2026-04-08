@@ -9,7 +9,7 @@ public class ordVet {
         int[] tamanhos = {5000, 10000, 30000, 50000};
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== Escolha o algoritmo de ordenacao ===");
+        System.out.println("=== Escolha o algoritmo de ordenacao conforme as opcoes abaixo ===");
         System.out.println("1 - Bubble Sort");
         System.out.println("2 - Selection Sort");
         System.out.println("3 - Insertion Sort");
@@ -45,9 +45,9 @@ public class ordVet {
             int[] vetMelhor    = new int[N];
             int[] vetPior      = new int[N];
 
-            inicializarVetor(vetAleatorio, N, 0);
-            inicializarVetor(vetMelhor,    N, 1);
-            inicializarVetor(vetPior,      N, 2);
+            inicializarVetor(vetAleatorio, N, 0); // 0 - Aleatorio, 1 - Ordenado, 2 - Inverso
+            inicializarVetor(vetMelhor,    N, 1); // 0 - Aleatorio, 1 - Ordenado, 2 - Inverso
+            inicializarVetor(vetPior,      N, 2); // 0 - Aleatorio, 1 - Ordenado, 2 - Inverso
 
             String[] nomes    = {"Aleatorio", "Melhor Caso", "Pior Caso"};
             int[][] originais = {vetAleatorio, vetMelhor, vetPior};
@@ -120,11 +120,11 @@ public class ordVet {
 
     private static void ordenarSelection(int[] vet, int N) {
         for (int i = 0; i < N - 1; i++) {
-            int minIdx = i;
+            int min = i;
             for (int j = i + 1; j < N; j++)
-                if (vet[j] < vet[minIdx])
-                    minIdx = j;
-            troca(vet, i, minIdx);
+                if (vet[j] < vet[min])
+                    min = j;
+            troca(vet, i, min);
         }
     }
 
