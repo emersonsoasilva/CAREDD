@@ -6,7 +6,7 @@ public class Josephus {
     public static void main(String[] args) {
 
         int N = 7;
-        int S = 3;
+        int S = 4;
 
         for (int i = 1; i <= N; i++) {
             insereFinal(i);
@@ -54,9 +54,35 @@ public class Josephus {
 
     static void josephus(int s) {
 
-        for (int i = 1; i <= s; i++) {
-            
+        if (inicio == null || s <= 0) {
+
         }
+
+        No temp = inicio;
+
+        while (temp.prox != inicio) {
+            temp = temp.prox;
+
+        }
+        
+        No anterior = temp;
+
+        temp = inicio;
+
+        while (temp.prox != temp) {
+
+            for (int i = 1; i < s; i++) {
+                anterior = temp;
+                temp = temp.prox;
+            }
+
+            
+        System.out.println("Removido: " + temp.valor);
+        anterior.prox = temp.prox;
+        temp = temp.prox;
+        }
+
+        inicio = temp;
     }
 
 }
