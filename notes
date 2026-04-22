@@ -1,0 +1,740 @@
+# Estrutura de Dados — Anotações de Prova
+
+---
+
+## 1. Ordenação de Vetores
+
+### Bubble Sort — O(n²)
+Compara pares vizinhos e troca. O maior "borbulha" pro final.
+- Melhor caso O(n) se já ordenado (com flag)
+- Estável
+
+### Insertion Sort — O(n²)
+Pega um elemento e insere na posição certa na parte já ordenada.
+- Ótimo pra vetores **quase ordenados**
+- Estável
+
+### Selection Sort — O(n²)
+Acha o menor elemento e coloca na posição correta, repetindo.
+- Sempre O(n²), poucas trocas
+- **Não** estável
+
+### Merge Sort — O(n log n)
+Divide ao meio recursivamente, ordena cada metade e mescla.
+- O(n log n) **garantido**
+- Estável, usa memória extra O(n)
+
+### Quick Sort — O(n log n) médio
+Escolhe pivô, menores à esquerda, maiores à direita, repete.
+- Pior caso O(n²) se pivô sempre for o menor/maior
+- **Não** estável
+
+### Tabela Comparativa
+
+| Algoritmo | Melhor | Médio | Pior | Estável? |
+|---|---|---|---|---|
+| Bubble | O(n) | O(n²) | O(n²) | ✅ |
+| Insertion | O(n) | O(n²) | O(n²) | ✅ |
+| Selection | O(n²) | O(n²) | O(n²) | ❌ |
+| Merge | O(n log n) | O(n log n) | O(n log n) | ✅ |
+| Quick | O(n log n) | O(n log n) | O(n²) | ❌ |
+
+> **Estável** = elementos iguais mantêm a ordem original entre si.
+
+---
+
+## 2. Pilha (aplicada a Lista Ligada)
+
+**LIFO** — Last In, First Out. O último a entrar é o primeiro a sair.
+
+- Nó de controle: **`topo`** (equivale ao `inicio` das listas)
+- `topo == null` → pilha vazia
+- Empilhar = inserir no **início** da lista
+- Desempilhar = remover do **início** da lista
+
+```
+topo
+ ↓
+[30|•]→[20|•]→[10|null]
+  ↑ último a entrar, primeiro a sair
+```
+
+```java
+class No {
+    int valor;
+    No prox;
+    No(int v) { valor = v; }
+}
+
+public class Pilha {
+    private No topo;
+
+    public Pilha() {
+        this.topo = null;
+    }
+
+    // Empilhar — insere no início (O(1))
+    public void empilhar(int x) {
+        No novo = new No(x);
+        if (vazia())
+            this.topo = novo;
+        else {
+            novo.prox = this.topo;  // novo aponta pro antigo topo
+            this.topo = novo;       // novo vira o topo
+        }
+    }
+
+    // Desempilhar — remove do início (O(1))
+    public void desempilhar() {
+        if (vazia())
+            System.out.println("Pilha vazia, nada a desempilhar");
+        else
+            topo = topo.prox;       // topo avança pro próximo
+    }
+
+    // Ver o topo sem remover
+    public int topo() {
+        if (!vazia())
+            return topo.valor;
+        else
+            System.out.println("Pilha vazia, ninguém no topo");
+        return -1;
+    }
+
+    public boolean vazia() {
+        if (this.topo == null)
+            return true;
+        return false;
+    }
+
+    // Tamanho — percorre contando
+    public int tamanho() {
+        int cont = 0;
+        if (!vazia()) {
+            No temp = this.topo;
+            while (temp != null) {
+                cont++;
+                temp = temp.prox;
+            }
+        }
+        return cont;
+    }
+
+    // Exibir — usa recursão (do topo ao fundo)
+    public void exibir() {
+        if (this.topo == null)
+            System.out.println("Pilha vazia, nada a exibir.");
+        else
+            exibirRec(topo);
+    }
+
+    private void exibirRec(No temp) {
+        if (temp != null) {
+            System.out.println(temp.valor);
+            exibirRec(temp.prox);
+        }
+    }
+}
+```
+
+### Pontos-chave da Pilha
+
+- **`novo.prox = this.topo` antes de `this.topo = novo`** — a ordem importa, igual ao inserirInicio das listas
+- `desempilhar` é só `topo = topo.prox`, sem variável auxiliar
+- O `exibir` usa **recursão** — padrão do professor
+
+---
+
+## 3. Fila (aplicada a Lista Ligada)
+
+**FIFO** — First In, First Out. O primeiro a entrar é o primeiro a sair.
+
+- Nó de controle: **`cabeca`** (equivale ao `inicio` das listas)
+- `cabeca == null` → fila vazia
+- Enfileirar = inserir no **fim** da lista
+- Desenfileirar = remover do **início** da lista
+
+```
+cabeca                       cauda
+  ↓                            ↓
+[10|•]→[20|•]→[30|null]
+  ↑ primeiro a sair  ↑ último a entrar
+```
+
+```java
+public class Fila {
+    private No cabeca;
+
+    public Fila() {
+        this.cabeca = null;
+    }
+
+    // Enfileirar — insere no fim (O(n))
+    public void enfileirar(int x) {
+        No novo = new No(x);
+        if (vazia())
+            this.cabeca = novo;
+        else {
+            No temp = this.cabeca;
+            while (temp.prox != null)   // navega até o último
+                temp = temp.prox;
+            temp.prox = novo;           // encadeia o novo ao final
+        }
+    }
+
+    // Desenfileirar — remove do início (O(1))
+    public void desenfileirar() {
+        if (vazia())
+            System.out.println("Fila vazia, nada a desenfileirar");
+        else
+            cabeca = cabeca.prox;       // cabeça avança pro próximo
+    }
+
+    // Ver o primeiro da fila
+    public int cabeca() {
+        if (!vazia())
+            return this.cabeca.valor;
+        else
+            System.out.println("Fila vazia, sem cabeça");
+        return -1;
+    }
+
+    // Ver o último da fila — percorre até o fim
+    public int cauda() {
+        if (!vazia()) {
+            No temp = this.cabeca;
+            while (temp.prox != null)
+                temp = temp.prox;
+            System.out.println(temp.valor);
+        } else {
+            System.out.println("Fila vazia, sem cauda");
+        }
+        return -1;
+    }
+
+    public boolean vazia() {
+        if (this.cabeca == null)
+            return true;
+        return false;
+    }
+
+    // Tamanho — percorre contando
+    public int tamanho() {
+        int cont = 0;
+        if (!vazia()) {
+            No temp = this.cabeca;
+            while (temp != null) {
+                cont++;
+                temp = temp.prox;
+            }
+        }
+        return cont;
+    }
+
+    // Exibir — loop simples do início ao fim
+    public void exibir() {
+        if (this.cabeca == null)
+            System.out.println("Fila vazia, nada a exibir.");
+        else {
+            No temp = this.cabeca;
+            while (temp != null) {
+                System.out.println(temp.valor);
+                temp = temp.prox;
+            }
+        }
+    }
+}
+```
+
+### Pontos-chave da Fila
+
+- **`enfileirar` percorre até o fim** com `temp` — não tem atalho pro último numa lista simples
+- **`desenfileirar` é só `cabeca = cabeca.prox`** — idêntico ao desempilhar, só muda o nome
+- Diferença no exibir: Fila usa **loop**, Pilha usa **recursão**
+
+---
+
+## 4. Pilha × Fila — Diferenças que o professor cobra
+
+```
+               PILHA                    FILA
+Nó controle    topo                     cabeca
+Inserir em     início (O(1))            fim (O(n))
+Remover de     início (O(1))            início (O(1))
+Ordem          LIFO                     FIFO
+Exibir         recursão                 loop
+Vazia quando   topo == null             cabeca == null
+```
+
+A lógica de **inserção** é a maior diferença:
+- Pilha: `novo.prox = topo` → `topo = novo` (igual ao inserirInicio)
+- Fila: percorre com `temp` até `temp.prox == null`, então `temp.prox = novo` (igual ao inserirFim)
+
+---
+
+## 5. Listas Ligadas
+
+### O que é cada variável (estilo do professor)
+
+- **`inicio`** — variável que guarda o **endereço do primeiro nó**. É a âncora da lista. Sem ela você perde tudo.
+- **`novo`** — endereço do nó recém-criado na memória (`new No(x)`).
+- **`temp`** — ponteiro auxiliar para **navegar sem mover o `inicio`**.
+
+```java
+// Nó simples
+class No {
+    int valor;
+    No prox;
+    No(int v) { valor = v; }
+}
+
+// Nó duplo
+class No {
+    int valor;
+    No prox;
+    No ant;
+    No(int v) { valor = v; }
+}
+```
+
+### O que cada operação faz visualmente
+
+```
+inicio = novo         →  novo vira a entrada da lista
+novo.prox = inicio    →  novo aponta pro antigo primeiro
+temp = temp.prox      →  anda um passo pra frente
+temp.prox = novo      →  encadeia o novo ao final
+temp.prox = null      →  corta o último da corrente
+```
+
+### ⚠️ Ordem importa no inserirInicio!
+
+```java
+novo.prox = inicio;  // 1º: salva o antigo início
+inicio = novo;       // 2º: atualiza a entrada
+```
+Se inverter, perde o endereço do antigo início antes de salvar.
+
+---
+
+### 5.1 Lista Ligada Simples
+
+`inicio.ant` não existe. Último nó tem `prox = null`.
+
+```
+inicio
+  ↓
+[10|•]→[20|•]→[30|null]
+```
+
+**Condição de parada do loop:** `temp != null`  
+**1 elemento:** `inicio.prox == null`
+
+```java
+// Inserir no início
+static void inserirInicio(int x) {
+    No novo = new No(x);
+    if (inicio == null)
+        inicio = novo;
+    else {
+        novo.prox = inicio;
+        inicio = novo;
+    }
+}
+
+// Inserir no fim
+static void inserirFim(int x) {
+    No novo = new No(x);
+    if (inicio == null)
+        inicio = novo;
+    else {
+        No temp = inicio;
+        while (temp.prox != null)
+            temp = temp.prox;
+        temp.prox = novo;
+    }
+}
+
+// Remover do início
+static void removerInicio() {
+    if (inicio == null)
+        System.out.println("Lista vazia!");
+    else
+        inicio = inicio.prox;
+}
+
+// Remover do fim (padrão do professor)
+static void removerFim() {
+    if (inicio == null)
+        System.out.println("Lista vazia!");
+    else if (inicio.prox == null)
+        inicio = null;
+    else {
+        No temp = inicio;
+        while (temp.prox.prox != null)  // para no PENÚLTIMO
+            temp = temp.prox;
+        temp.prox = null;
+    }
+}
+
+// Imprimir
+static void imprimir() {
+    No temp = inicio;
+    while (temp != null) {
+        System.out.print(temp.valor + " → ");
+        temp = temp.prox;
+    }
+    System.out.println("null");
+}
+```
+
+#### Por que `temp.prox.prox` no removerFim?
+
+Você precisa parar no **penúltimo** — só ele consegue cortar o ponteiro pro último.
+Se fosse até o último, não haveria como chegar no anterior (lista simples não tem `ant`).
+
+#### Regra geral dos `.prox` na condição:
+
+```
+Condição do while            Onde temp para
+─────────────────────────────────────────────
+temp.prox != null            no último
+temp.prox.prox != null       no penúltimo
+temp.prox.prox.prox != null  no antepenúltimo
+```
+
+> Cada `.prox` a mais na condição faz o `temp` parar **um nó antes**.  
+> O `.prox.prox` **não pula dois nós** — é uma **condição de teste** (espiar dois nós à frente).  
+> Quem anda é sempre `temp = temp.prox`, um passo de cada vez.
+
+---
+
+### 5.2 Lista Duplamente Ligada
+
+Cada nó tem `prox` e `ant`. `inicio.ant = null`, último `prox = null`.
+
+```
+       inicio
+         ↓
+null←[10|•|•]↔[20|•|•]↔[30|•|null]
+```
+
+**Diferença chave pro removerFim:** na dupla você vai até o **último**
+(`temp.prox != null`) e usa `temp.ant.prox = null`, pois consegue
+voltar pelo `ant`. Na simples para no **penúltimo** com `temp.prox.prox != null`.
+
+```java
+// Inserir no início
+static void inserirInicio(int x) {
+    No novo = new No(x);
+    if (inicio == null)
+        inicio = novo;
+    else {
+        novo.prox = inicio;
+        inicio.ant = novo;   // linha extra que a simples não tem
+        inicio = novo;
+    }
+}
+
+// Inserir no fim
+static void inserirFim(int x) {
+    No novo = new No(x);
+    if (inicio == null)
+        inicio = novo;
+    else {
+        No temp = inicio;
+        while (temp.prox != null)
+            temp = temp.prox;
+        temp.prox = novo;
+        novo.ant = temp;     // aponta de volta pro antigo último
+    }
+}
+
+// Remover do início
+static void removerInicio() {
+    if (inicio == null)
+        System.out.println("Lista vazia!");
+    else if (inicio.prox == null)
+        inicio = null;
+    else {
+        inicio = inicio.prox;
+        inicio.ant = null;   // limpa o ponteiro para trás
+    }
+}
+
+// Remover do fim
+static void removerFim() {
+    if (inicio == null)
+        System.out.println("Lista vazia!");
+    else if (inicio.prox == null)
+        inicio = null;
+    else {
+        No temp = inicio;
+        while (temp.prox != null)  // vai até o ÚLTIMO
+            temp = temp.prox;
+        temp.ant.prox = null;      // penúltimo esquece o último
+    }
+}
+```
+
+---
+
+### 5.3 Lista Circular Simples
+
+O último nó aponta de volta pro `inicio`. Não existe `null` no final.
+
+```
+inicio
+  ↓
+[10|•]→[20|•]→[30|•]
+  ↑_________________↑
+```
+
+**Condição de parada do loop:** `temp.prox != inicio`  
+**1 elemento:** `inicio.prox == inicio`
+
+> ⚠️ `do-while` obrigatório no imprimir — com `while` normal a condição
+> `temp != inicio` seria falsa logo de cara e não imprimiria nada.
+
+```java
+// Inserir no fim
+static void inserirFim(int x) {
+    No novo = new No(x);
+    if (inicio == null) {
+        inicio = novo;
+        novo.prox = inicio;         // aponta pra si mesmo
+    } else {
+        No temp = inicio;
+        while (temp.prox != inicio) // para no último
+            temp = temp.prox;
+        temp.prox = novo;
+        novo.prox = inicio;         // fecha o círculo
+    }
+}
+
+// Remover do início
+static void removerInicio() {
+    if (inicio == null)
+        System.out.println("Lista vazia!");
+    else if (inicio.prox == inicio)
+        inicio = null;
+    else {
+        No temp = inicio;
+        while (temp.prox != inicio) // acha o último
+            temp = temp.prox;
+        inicio = inicio.prox;
+        temp.prox = inicio;         // último atualiza pro novo início
+    }
+}
+
+// Remover do fim
+static void removerFim() {
+    if (inicio == null)
+        System.out.println("Lista vazia!");
+    else if (inicio.prox == inicio)
+        inicio = null;
+    else {
+        No temp = inicio;
+        while (temp.prox.prox != inicio) // para no penúltimo
+            temp = temp.prox;
+        temp.prox = inicio;              // fecha o círculo
+    }
+}
+
+// Imprimir — do-while obrigatório!
+static void imprimir() {
+    if (inicio == null) return;
+    No temp = inicio;
+    do {
+        System.out.print(temp.valor + " → ");
+        temp = temp.prox;
+    } while (temp != inicio);
+    System.out.println("(início)");
+}
+```
+
+---
+
+### 5.4 Lista Circular Duplamente Ligada (LDLC)
+
+`prox` + `ant` + círculo fecha nos dois sentidos.
+
+```
+inicio
+  ↓
+[10|•|•]↔[20|•|•]↔[30|•|•]
+  ↑_________________________↑
+```
+
+**Condição de parada do loop:** `temp.prox != inicio`  
+**1 elemento:** `inicio.prox == inicio`
+
+> 🔑 **Truque de ouro:** `inicio.ant` numa LDLC **sempre é o último nó**, em O(1).  
+> Não precisa percorrer nada pra inserir no fim.
+
+```java
+// Inserir no fim — O(1)!
+static void inserirFim(int x) {
+    No novo = new No(x);
+    if (inicio == null) {
+        inicio = novo;
+        novo.prox = inicio;
+        novo.ant  = inicio;
+    } else {
+        No ultimo = inicio.ant;  // inicio.ant = último direto
+        ultimo.prox = novo;
+        novo.ant    = ultimo;
+        novo.prox   = inicio;
+        inicio.ant  = novo;
+    }
+}
+
+// Remover do início
+static void removerInicio() {
+    if (inicio == null)
+        System.out.println("Lista vazia!");
+    else if (inicio.prox == inicio)
+        inicio = null;
+    else {
+        No ultimo = inicio.ant;
+        inicio = inicio.prox;
+        ultimo.prox = inicio;
+        inicio.ant  = ultimo;
+    }
+}
+
+// Remover do fim
+static void removerFim() {
+    if (inicio == null)
+        System.out.println("Lista vazia!");
+    else if (inicio.prox == inicio)
+        inicio = null;
+    else {
+        No ultimo    = inicio.ant;
+        No penultimo = ultimo.ant;
+        penultimo.prox = inicio;
+        inicio.ant     = penultimo;
+    }
+}
+
+// Imprimir
+static void imprimir() {
+    if (inicio == null) return;
+    No temp = inicio;
+    do {
+        System.out.print(temp.valor + " ↔ ");
+        temp = temp.prox;
+    } while (temp != inicio);
+    System.out.println("(início)");
+}
+```
+
+---
+
+### 5.5 Mapa Comparativo das Listas
+
+```
+                  CONDIÇÃO          CONDIÇÃO        INSERIR
+                  DE PARADA         1 ELEMENTO      NO FIM
+                  (loop)            (remoção)
+
+Simples           temp != null      inicio.prox      percorre até null
+                                    == null
+
+Dupla             temp != null      inicio.prox      percorre até null
+                                    == null          + ajusta .ant
+
+Circ. Simples     temp.prox         inicio.prox      percorre até
+                  != inicio         == inicio        temp.prox == inicio
+
+Circ. Dupla       temp.prox         inicio.prox      inicio.ant
+                  != inicio         == inicio        direto — O(1)!
+```
+
+| Estrutura | Inserção início | Inserção fim | Remoção início | Remoção fim |
+|---|---|---|---|---|
+| Simples | O(1) | O(n) | O(1) | O(n) |
+| Dupla | O(1) | O(n) | O(1) | O(n)* |
+| Circ. Simples | O(n)** | O(n) | O(n)** | O(n) |
+| Circ. Dupla | O(1) | **O(1)** | O(1) | O(1) |
+
+\* O(1) se já tiver o ponteiro direto pro nó  
+\*\* O(n) porque precisa achar o último pra fechar o círculo
+
+---
+
+## 6. Josephus com LDLC
+
+### Padrão do professor (Java)
+
+```java
+static void josephusLouco(int s, int j) {
+    while (inicio != inicio.prox) {  // para quando restar 1 nó
+
+        // Eliminação para FRENTE
+        // inicio já É o 1º, então anda só (s-1) vezes
+        for (int i = 0; i < (s - 1); i++)
+            inicio = inicio.prox;
+
+        System.out.println("removendo " + inicio.valor);
+        inicio.ant.prox = inicio.prox;   // costura os vizinhos
+        inicio.prox.ant = inicio.ant;
+        inicio = inicio.prox;            // cursor vai pro PRÓXIMO
+
+        // Eliminação para TRÁS
+        for (int i = 0; i < (j - 1); i++)
+            inicio = inicio.ant;
+
+        System.out.println("removendo " + inicio.valor);
+        inicio.ant.prox = inicio.prox;
+        inicio.prox.ant = inicio.ant;
+        inicio = inicio.ant;             // cursor vai pro ANTERIOR
+    }
+    System.out.println("Sobrevivente: " + inicio.valor);
+}
+```
+
+### Os 3 pontos que o professor cobra
+
+**1. Condição do while**
+```java
+inicio != inicio.prox
+// NÃO: tamanho > 1 ou lista != null
+```
+1 elemento numa circular aponta pra si mesmo — essa é a forma natural de detectar.
+
+**2. `s-1` e `j-1` nos loops**  
+O `inicio` já está sobre o 1º candidato e conta como posição 1.
+Andar `s` vezes levaria ao `(s+1)`-ésimo.
+
+**3. Direção do cursor pós-remoção**
+- Removeu indo pra **frente** → `inicio = inicio.prox`
+- Removeu indo pra **trás** → `inicio = inicio.ant`
+
+O cursor precisa ter ponto de partida consistente com a **próxima direção** que vai andar.
+
+### Remoção inline (as 2 linhas essenciais)
+
+```java
+inicio.ant.prox = inicio.prox;  // anterior aponta pro seguinte
+inicio.prox.ant = inicio.ant;   // seguinte aponta pro anterior
+// depois: mover inicio — em Java o GC recolhe o nó solto
+```
+
+---
+
+## 7. Resumo Geral — O que liga tudo
+
+```
+Pilha   →  inserir e remover sempre no INÍCIO   →  LIFO
+Fila    →  inserir no FIM, remover no INÍCIO    →  FIFO
+
+Ambas são listas ligadas simples por baixo.
+A diferença está só em ONDE inserem.
+
+Listas:
+  Simples    →  navegação unidirecional
+  Dupla      →  navegação bidirecional, remoção com ponteiro
+  Circular   →  sem fim definido, Josephus, buffers
+  Circ.Dupla →  tudo acima + inicio.ant = último em O(1)
+```
