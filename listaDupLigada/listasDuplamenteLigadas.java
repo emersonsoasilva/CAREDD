@@ -3,17 +3,18 @@ package listaDupLigada;
 public class listasDuplamenteLigadas {
 
     static No inicio = null;
+    static No fim = null;
     
     public static void main(String[] args) {
 
     }
     
-    // Inserir no início
     static void inserirInicio(int x){
         No novo = new No(x);
 
-        if(inicio == null)
-            inicio = novo;
+        if(inicio == null){
+            inicio = fim = novo;
+        }
         else {
             novo.prox = inicio;
             inicio.ant = novo;
@@ -21,29 +22,25 @@ public class listasDuplamenteLigadas {
         }
     }
     
-    // Inserir no final
     static void inserirFinal(int x){
         No novo = new No(x);
 
-        if(inicio == null)
-            inicio = novo;
+        if(inicio == null){
+            inicio = fim = novo;
+        }
         else {
-            No temp = inicio;
-
-            while(temp.prox != null)
-                temp = temp.prox;
-
-            temp.prox = novo;
-            novo.ant = temp;
+            fim.prox = novo;
+            novo.ant = fim;
+            fim = novo;
         }
     }
     
-    // Inserir ordenado (crescente)
     static void inserirOrdenado(int x){
         No novo = new No(x);
 
-        if(inicio == null)
-            inicio = novo;
+        if(inicio == null){
+            inicio = fim = novo;
+        }
 
         else if(x < inicio.valor){
             novo.prox = inicio;
@@ -51,23 +48,26 @@ public class listasDuplamenteLigadas {
             inicio = novo;
         }
 
+        else if(x > fim.valor){
+            fim.prox = novo;
+            novo.ant = fim;
+            fim = novo;
+        }
+
         else {
             No temp = inicio;
 
-            while(temp.prox != null && temp.prox.valor < x)
+            while(temp.prox.valor < x)
                 temp = temp.prox;
 
             novo.prox = temp.prox;
-
-            if(temp.prox != null)
-                temp.prox.ant = novo;
+            temp.prox.ant = novo;
 
             temp.prox = novo;
             novo.ant = temp;
         }
     }
 
-    // Exibir normal
     static void exibir(){
         if(inicio == null)
             System.out.println("Lista vazia!");
@@ -82,18 +82,12 @@ public class listasDuplamenteLigadas {
         }
     }
 
-    // Exibir inverso
     static void exibirInverso(){
-        if(inicio == null)
+        if(fim == null)
             System.out.println("Lista vazia!");
         else {
-            No temp = inicio;
+            No temp = fim;
 
-            // vai até o último
-            while(temp.prox != null)
-                temp = temp.prox;
-
-            // volta imprimindo
             while(temp != null){
                 System.out.print(temp.valor + " ↔ ");
                 temp = temp.ant;
@@ -102,7 +96,6 @@ public class listasDuplamenteLigadas {
         }
     }
 
-    // Remover valor específico
     static void remover(int x){
         if(inicio == null){
             System.out.println("Lista vazia!");
@@ -111,7 +104,6 @@ public class listasDuplamenteLigadas {
 
         No temp = inicio;
 
-        // procura o valor
         while(temp != null && temp.valor != x)
             temp = temp.prox;
 
@@ -123,7 +115,7 @@ public class listasDuplamenteLigadas {
             removerPrimeiro();
         }
 
-        else if(temp.prox == null){
+        else if(temp == fim){
             removerUltimo();
         }
 
@@ -133,31 +125,27 @@ public class listasDuplamenteLigadas {
         }
     }
 
-    // Remover primeiro
     static void removerPrimeiro(){
         if(inicio == null)
             System.out.println("Lista vazia!");
-        else if(inicio.prox == null)
-            inicio = null;
+        else if(inicio == fim){
+            inicio = fim = null;
+        }
         else {
             inicio = inicio.prox;
             inicio.ant = null;
         }
     }
 
-    // Remover último
     static void removerUltimo(){
-        if(inicio == null)
+        if(fim == null)
             System.out.println("Lista vazia!");
-        else if(inicio.prox == null)
-            inicio = null;
+        else if(inicio == fim){
+            inicio = fim = null;
+        }
         else {
-            No temp = inicio;
-
-            while(temp.prox != null)
-                temp = temp.prox;
-
-            temp.ant.prox = null;
+            fim = fim.ant;
+            fim.prox = null;
         }
     }
 
