@@ -1,7 +1,6 @@
 
-public class Josephus {
-
-    static No inicio = null; // <- VARIÁVEL GLOBAL
+public class Josephus2 {
+    static No inicio = null;
 
     public static void main(String[] args) {
 
@@ -19,7 +18,8 @@ public class Josephus {
         System.out.println("JOSEPHUS");
         System.out.println("N = " + N);
         System.out.println("S = " + S);
-        System.out.println("Sobrevivente: " + inicio.valor);
+        System.out.println("P = " + P);
+        // System.out.println("Sobrevivente: " + inicio.valor);
 
     }
 
@@ -84,5 +84,4 @@ public class Josephus {
 
         inicio = temp;
     }
-
 }
