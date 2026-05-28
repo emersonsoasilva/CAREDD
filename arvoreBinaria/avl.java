@@ -5,10 +5,9 @@ public class avl {
     public static NoA raiz = null;
 
     public static void main(String[] args) {
-        for (int i = 0; i < 30; i++) {
-            int x = (int) (Math.random() * 100);
+        for (int i = 0; i < 15; i++) {
             //System.out.println("Inserindo: " + x);
-            inserir(x);
+            inserir(i);
         }
         System.out.println("------ exibicao --------");
         exibeArvore(raiz, 0);
@@ -19,6 +18,8 @@ public class avl {
         } else {
             System.out.println("A árvore não é AVL.");
         }
+
+        rodar(13, -1); // Exemplo de rotação à direita no nó com valor 13
     }
 
 
@@ -27,6 +28,14 @@ public class avl {
             mostrarFB(raiz.esq);
             System.out.println("Valor: "+raiz.valor+" FB: "+fatorBalanceamento(raiz));
             mostrarFB(raiz.dir);
+        }
+    }
+
+    public static void rodar(int v, int d) {
+        if (d == -1) {
+            raiz = girarDireita(raiz);
+        } else if (d == 1) {
+            raiz = girarEsquerda(raiz);
         }
     }
 
@@ -132,4 +141,5 @@ public class avl {
         y.esq = x; // Torne X o filho à esquerda de Y
         return y;
     }
+
 }
