@@ -118,4 +118,18 @@ public class avl {
             System.out.println();
         
     }
+
+    public static NoA girarDireita(NoA x){
+        NoA y = x.esq; //Seja Y o filho à esquerda de X
+        x.esq = y.dir; // Torne o filho à direita de Y o filho à esquerda de X.
+        y.dir = x; // Torne X o filho à direita de Y
+        return y;
+    }
+
+    public static NoA girarEsquerda(NoA x){
+        NoA y = x.dir; //Seja Y o filho à direita de X
+        x.dir = y.esq; // Torne o filho à esquerda de Y o filho à direita de X.
+        y.esq = x; // Torne X o filho à esquerda de Y
+        return y;
+    }
 }
