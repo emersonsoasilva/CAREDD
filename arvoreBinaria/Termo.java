@@ -119,9 +119,23 @@ public class Termo {
     }
     
     private static void removeParcial(String filtro) {
-        //Verifica se é fixo
 
-        
+        if(!existe(filtro)){
+
+            NoP novo = new NoP(filtro);
+
+            for (int i = 0; i < 5; i++) {
+                if(novo.palavra.charAt(i) != '*') {
+                    
+                }
+        }
+
+
+
+        }
+
+
+
 
 
 
